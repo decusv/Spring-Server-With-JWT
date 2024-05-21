@@ -1,5 +1,6 @@
-package com.spring_one.webSerrver.security.config;
+package com.spring_one.webSerrver.security.config.filters;
 
+import com.spring_one.webSerrver.security.config.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

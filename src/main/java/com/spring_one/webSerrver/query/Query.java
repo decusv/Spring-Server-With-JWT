@@ -1,105 +1,73 @@
 package com.spring_one.webSerrver.query;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.time.Period;
+/**
+ * Represents a query entity to be stored in the database.
+ * This class is mapped to the "queries" table in the database.
+ * It includes attributes like id, llmSystemName, llmModelName, querySize, and responseSize.
+ * The primary key is generated using a sequence generator.
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity // Indicates that this class is an entity and is mapped to a database table.
+@Table(name = "queries") // Indicates the name of the database table to be used for mapping.
+public class Query {
 
-@Entity // Tells JPA that you want to store this class as an entity in your DB. By default, class name is used as the table.
-@Table(name = "students") // This is needed if you want to customize the table name inside your DB.
-public class Student {
-
-    // The label @Id is used to annotate how the primary key attribute of the Student entity class will be generated.
-    // The @SequenceGenerator label is used to annotate a custom sequence generator used for generating primary key values.
+    /*
+     * The label @Id is used to annotate how the primary key attribute of the Student entity class will be generated.
+     * The @SequenceGenerator label is used to annotate a custom sequence generator used for generating primary key values.
+     * Defines the name of this custom sequence generator.
+     * The "name" attribute is used to uniquely identify the sequence generator inside the @GeneratedValue annotation.
+     * The "sequenceName" attribute of the database sequence that the generator is associated with. This is defined inside the DBMS itself i.e., PostgresQL.
+     * The "allocationSize" attribute specifies the number of sequence generated values needed before requesting the database to generate another.
+     *  - Higher allocation size would be useful when expecting bulk imports.
+     *  - Setting size as 50 means that the server will request and hold in-memory all 50 values until all have been assigned and used before calling DB for more.
+     *  - Using allocation size of more than 1 can lead to gaps in primary keys if the application crashes.
+     */
     @Id
     @SequenceGenerator(
-            // Defines the name of this custom sequence generator. This attribute is used to uniquely identify the sequence generator inside the @GeneratedValue annotation.
-            name = "student_sequence",
-            // Specifies the name of the database sequence that the generator is associated with. This is defined inside the DBMS itself i.e., PostgreSQL
-            sequenceName = "student_sequence",
-            // Specifies the allocation size for fetching values from a sequence.
+            name = "query_sequence",
+            sequenceName = "query_sequence",
             allocationSize = 1
     )
 
-    // This annotation is used to specify the strategy used to generate the primary key for entities inside the persistent database.
+    /*
+      Specifies the primary key generation strategy for the entity defined in the class i.e., 'Query'.
+      The attribute "generator" specifies the defined DB sequence i.e., "name" from the "SequenceGenerator" annotation.
+      The attribute "strategy" defines generation sequence. In this case, incremental.
+      - Semantics of the strategy differ between database types.
+     */
     @GeneratedValue(
             //
             strategy = GenerationType.SEQUENCE,
-            generator = "student_sequence"
+            generator = "query_sequence"
     )
+
     private Long id;
-    private String name;
 
-    // The below field doesn't have to be a column inside the database.
-    @Transient
-    private Integer age;
-    private String email;
-    private LocalDate dob;
+    /**
+     * The name of the LLM (Language Learning Model) system.
+     */
+    private String llmSystemName;
 
-    public Student() {
-    }
+    /**
+     * The name of the LLM model.
+     */
+    private String llmModelName;
 
-    public Student(Long id, String name, String email, LocalDate dob) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.dob = dob;
-    }
+    /**
+     * The size of the query.
+     */
+    private Integer querySize;
 
-    public Student(String name, String email, LocalDate dob) {
-        this.name = name;
-        this.email = email;
-        this.dob = dob;
-    }
+    /**
+     * The size of the response.
+     */
+    private Integer responseSize;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getAge() {
-        return Period.between(this.dob,LocalDate.now()).getYears();
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public LocalDate getDob() {
-        return dob;
-    }
-
-    public void setDob(LocalDate dob) {
-        this.dob = dob;
-    }
-
-    @Override
-    public String toString() {
-        return "student{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                ", email='" + email + '\'' +
-                ", dob=" + dob +
-                '}';
-    }
 }

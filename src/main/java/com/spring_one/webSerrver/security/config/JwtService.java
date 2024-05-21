@@ -1,4 +1,4 @@
-package com.spring_one.demo.security.user.config;
+package com.spring_one.webSerrver.security.config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -55,16 +55,19 @@ public class JwtService {
 
     }
 
-    // TODO: How are we comparing dates here?
+    // TODO: How are we comparing dates here? Is this comparing just the "day" part of the date?
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
     // Method extracts the 'exp' claim from the JWT token.
+    // TODO: How does the Claims::Expiration syntax work? What does it mean?
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
+    // TODO: Understand this. Why HashMap and not a normal Map?
+    // Generate the token using the user details object without extra claims.
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
@@ -80,7 +83,7 @@ public class JwtService {
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24 ))
-                .signWith(getSignInKey()) // Signing Algorithm is assumed. Using
+                .signWith(getSignInKey()) // Signing Algorithm is implied to be HS256
                 .compact();
     }
 

@@ -1,4 +1,4 @@
-package com.spring_one.demo.security.user;
+package com.spring_one.webSerrver.security.user;
 
 
 import jakarta.persistence.*;
@@ -22,10 +22,10 @@ import java.util.List;
 // Generates a constructor with all arguments i.e., all defined fields.
 @AllArgsConstructor
 @Entity
-@Table
+@Table(name = "users")
 public class User implements UserDetails {
 
-   @jakarta.persistence.Id
+   @Id
    @SequenceGenerator(
            // Defines the name of this custom sequence generator. This attribute is used to uniquely identify the sequence generator inside the @GeneratedValue annotation.
            name = "user_sequence",

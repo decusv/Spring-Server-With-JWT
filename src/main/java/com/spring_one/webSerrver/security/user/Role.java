@@ -1,4 +1,4 @@
-package com.spring_one.demo.security.user;
+package com.spring_one.webSerrver.security.user;
 
 public enum Role {
 

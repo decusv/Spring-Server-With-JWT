@@ -1,63 +1,57 @@
 package com.spring_one.webSerrver.query;
 
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class StudentService {
+@RequiredArgsConstructor
+public class QueryService {
 
 
-    private final StudentRepository studentRepository;
+    private final QueryRepository queryRepository;
 
-    @Autowired
-    public StudentService(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository;
-    }
+    public List<Query> listQueries() {
 
-    public List<Student> getStudents() {
-
-        return studentRepository.findAll();
+        return queryRepository.findAll();
 
     }
 
 
     @Transactional
-    public void addNewStudent(Student student) {
-        Optional<Student> studentResults = studentRepository.findStudentByEmail(student.getEmail());
+    public void addNewQuery(Query query) {
+        Optional<Query> studentResults = queryRepository.findQueryById(query.getId());
 
         if (studentResults.isPresent()) {
             throw new IllegalStateException("A record with this email address already exists.");
         }
 
-        studentRepository.save(student);
+        queryRepository.save(query);
     }
     @Transactional
-    public void deleteStudent(Long id) {
-        boolean exists = studentRepository.existsById(id);
+    public void deleteQuery(Long id) {
+        boolean exists = queryRepository.existsById(id);
         if (!exists) {
             throw new IllegalStateException(
                     "Student with id " + id + " does not exist"
             );
         }
-        studentRepository.deleteById(id);
+        queryRepository.deleteById(id);
     }
 
     @Transactional
-    public void updateStudent(Student student) {
+    public void updateQuery(Query query) {
 
-        Optional<Student> results = studentRepository.findStudentByEmail(student.getEmail());
+        Optional<Query> results = queryRepository.findQueryById(query.getId());
 
         if (results.isPresent()) {
-            Student existingStudent = results.get();
-            existingStudent.setName(student.getName()); // Update the name field
-            existingStudent.setDob(student.getDob());
+            Query existingQuery = results.get();
+            existingQuery.setLlmSystemName(query.getLlmSystemName()); // Update the name field
 
             // Save the updated student back to the database
-            studentRepository.save(existingStudent);
+            queryRepository.save(existingQuery);
         } else {
             throw new IllegalStateException("Student with this email doesn't exist");
         }

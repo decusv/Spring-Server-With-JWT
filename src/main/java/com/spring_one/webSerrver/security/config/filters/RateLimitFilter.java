@@ -1,43 +1,48 @@
-package com.spring_one.webSerrver.security.config;
+    package com.spring_one.webSerrver.security.config.filters;
+
+    import io.github.bucket4j.Bandwidth;
+    import io.github.bucket4j.Bucket;
+    import jakarta.servlet.Filter;
+    import jakarta.servlet.FilterChain;
+    import jakarta.servlet.FilterConfig;
+    import jakarta.servlet.ServletException;
+    import jakarta.servlet.ServletRequest;
+    import jakarta.servlet.ServletResponse;
+    import jakarta.servlet.http.HttpServletResponse;
+    import org.springframework.stereotype.Component;
+
+    import java.io.IOException;
+    import java.time.Duration;
 
 
-import io.github.bucket4j.Bandwidth;
-import io.github.bucket4j.Bucket;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.NonNull;
-import org.springframework.core.Ordered;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
+    @Component
+    public class RateLimitFilter implements Filter {
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.time.Duration;
+        private Bucket bucket;
 
-@Component
-public class RateLimitFilter extends OncePerRequestFilter implements Ordered {
-
-    private final Bucket bucket;
-
-    public RateLimitFilter() {
-        Bandwidth limit = Bandwidth.builder().capacity(10).refillGreedy(10,Duration.ofMinutes(1)).build();
-        this.bucket = Bucket.builder().addLimit(limit).build();
-    }
-
-    @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request,@NonNull jakarta.servlet.http.HttpServletResponse response,@NonNull jakarta.servlet.FilterChain filterChain) throws jakarta.servlet.ServletException, IOException {
-        if (bucket.tryConsume(1)) {
-            filterChain.doFilter(request, response);
-        } else {
-            HttpServletResponse httpResponse = (HttpServletResponse) response;
-            httpResponse.setStatus(HttpStatus.TOO_MANY_REQUESTS.value() );
-            httpResponse.getWriter().write("Too many requests");
+        @Override
+        public void init(FilterConfig filterConfig) {
+            Bandwidth limit = Bandwidth.builder().capacity(10).refillGreedy(10, Duration.ofMinutes(1)).build();
+            bucket = Bucket.builder().addLimit(limit).build();
         }
-    }
 
-    @Override
-    public int getOrder() {
-        return Ordered.HIGHEST_PRECEDENCE;
-    }
+        @Override
+        public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+            HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
+            if (bucket.tryConsume(1)) {
+                filterChain.doFilter(servletRequest, servletResponse);
+            } else {
+                httpResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                String errorMessage = "{\"error\": \"Rate limit exceeded\"}";
+                httpResponse.setContentType("application/json");
+                httpResponse.getWriter().write(errorMessage);
+            }
+        }
 
-}
+        @Override
+        public void destroy() {
+
+        }
+
+        // other methods
+    }

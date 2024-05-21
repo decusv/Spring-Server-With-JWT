@@ -1,4 +1,4 @@
-package com.spring_one.demo;
+package com.spring_one.webSerrver;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
