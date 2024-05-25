@@ -19,19 +19,20 @@ public class AuthenticationController {
 
 
     /**
-     *
-     *
      * @param request - The @RequestBody annotation is used to deserialize the HTTP request into a Java object.
-     * The object's class (RegisterRequest) must contain the fields that the JSON request body would have.
-     *
+     *                The object's class (RegisterRequest) must contain the fields that the JSON request body would have.
      * @return Response Entity is a generic class representing an HTTP response.
      * It serialises the data from the AuthenticationResponse object such that it can be returned as JSON.
      */
+
+    @SuppressWarnings("unused")
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register (
+    public ResponseEntity<AuthenticationResponseWrapper> register (
             @RequestBody RegisterRequest request
     ) {
-        return ResponseEntity.ok(authenticationService.register(request));
+       AuthenticationResponse response = authenticationService.register(request);
+       AuthenticationResponseWrapper responseWrapper = new AuthenticationResponseWrapper(response);
+       return ResponseEntity.ok(responseWrapper);
     }
 
     /**
@@ -43,11 +44,14 @@ public class AuthenticationController {
      * @return Response Entity is a generic class representing an HTTP response.
      * It serialises the data from the AuthenticationResponse object such that it can be returned as JSON.
      */
+    @SuppressWarnings("unused")
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticateRequest (
+    public ResponseEntity<AuthenticationResponseWrapper> authenticateRequest (
             @RequestBody AuthenticationRequest request
     ) {
-        return ResponseEntity.ok(authenticationService.authenticate(request));
+        AuthenticationResponse response = authenticationService.authenticate(request);
+        AuthenticationResponseWrapper responseWrapper = new AuthenticationResponseWrapper(response);
+        return ResponseEntity.ok(responseWrapper);
     }
 
 }
