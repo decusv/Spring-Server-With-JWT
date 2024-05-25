@@ -6,7 +6,7 @@ import java.time.Instant;
 
 
 /**
- * metadataResponse is an object used to specifying metadata inside authentication responses.
+ * metadataResponse is an object used to specifying metadata inside authentication response.
  */
 @Getter
 @Data
