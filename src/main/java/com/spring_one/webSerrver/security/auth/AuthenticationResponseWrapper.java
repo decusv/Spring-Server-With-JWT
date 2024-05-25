@@ -15,11 +15,11 @@ public class AuthenticationResponseWrapper {
 
 
     private AuthenticationResponse authentication;
-    private metadataResponse meta_data;
+    private AuthenticationResponseMetadata meta_data;
 
     public AuthenticationResponseWrapper(AuthenticationResponse data) {
         this.authentication = data;
-        this.meta_data = new metadataResponse();
+        this.meta_data = new AuthenticationResponseMetadata();
     }
 
 }
