@@ -1,7 +1,5 @@
 package com.spring_one.webSerrver.query;
 
-import com.spring_one.webSerrver.security.auth.AuthenticationResponseWrapper;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -27,7 +25,7 @@ public class QueryController {
      * to the listQueries() method.
      */
     @GetMapping
-    // TODO : Update To Work With Targeted Query Retrieval.
+    @SuppressWarnings("unused")
     public List<Query> listQueries() {
 
         return queryService.listQueries();
@@ -44,6 +42,7 @@ public class QueryController {
             @ApiResponse(responseCode = "200", description = "A query has been successfully generated.",
                     content = @Content(schema = @Schema(implementation = Query.class))),
     })
+    @SuppressWarnings("unused")
     public void addQuery(@RequestBody Query query) {
         queryService.addNewQuery(query);
     }
@@ -58,6 +57,7 @@ public class QueryController {
             @ApiResponse(responseCode = "200", description = "A query has been successfully deleted.",
                     content = @Content(schema = @Schema(implementation = Query.class))),
     })
+    @SuppressWarnings("unused")
     public void deleteQuery(@PathVariable("queryId") Long id) {
         queryService.deleteQuery(id);
         }
@@ -72,6 +72,7 @@ public class QueryController {
             @ApiResponse(responseCode = "200", description = "A query has been successfully updated.",
                     content = @Content(schema = @Schema(implementation = Query.class))),
     })
+    @SuppressWarnings("unused")
     public void updateQuery(@RequestBody Query query) {
         queryService.updateQuery(query);
     }
