@@ -1,5 +1,12 @@
 package com.spring_one.webSerrver.query;
 
+import com.spring_one.webSerrver.security.auth.AuthenticationResponseWrapper;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -20,6 +27,7 @@ public class QueryController {
      * to the listQueries() method.
      */
     @GetMapping
+    // TODO : Update To Work With Targeted Query Retrieval.
     public List<Query> listQueries() {
 
         return queryService.listQueries();
@@ -31,6 +39,11 @@ public class QueryController {
      * to the addQuery() method.
      */
     @PostMapping
+    @Operation(summary = "generate a query", description = "Generates a query with a text input.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "A query has been successfully generated.",
+                    content = @Content(schema = @Schema(implementation = Query.class))),
+    })
     public void addQuery(@RequestBody Query query) {
         queryService.addNewQuery(query);
     }
@@ -40,6 +53,11 @@ public class QueryController {
      * to the deleteQuery() method.
      */
     @DeleteMapping(path = "{queryId}")
+    @Operation(summary = "Delete a query", description = "Delete a query with provided query identifier.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "A query has been successfully deleted.",
+                    content = @Content(schema = @Schema(implementation = Query.class))),
+    })
     public void deleteQuery(@PathVariable("queryId") Long id) {
         queryService.deleteQuery(id);
         }
@@ -49,6 +67,11 @@ public class QueryController {
      * to the updateQuery() method.
      */
     @PutMapping
+    @Operation(summary = "Update a query", description = "Updates a query.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "A query has been successfully updated.",
+                    content = @Content(schema = @Schema(implementation = Query.class))),
+    })
     public void updateQuery(@RequestBody Query query) {
         queryService.updateQuery(query);
     }
