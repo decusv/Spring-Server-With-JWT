@@ -16,7 +16,6 @@ public class OpenApiConfig {
                         .title("MetaQ API Reference")
                         .version("1.0")
                         .description("Your API Description")
-                        .termsOfService("Your Terms of Service")
                         .description("Your External Documentation Description"));
     }
 }
